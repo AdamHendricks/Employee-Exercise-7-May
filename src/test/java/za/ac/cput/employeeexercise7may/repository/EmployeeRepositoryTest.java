@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import za.ac.cput.employeeexercise7may.domain.Contact;
 import za.ac.cput.employeeexercise7may.domain.Employee;
+import za.ac.cput.employeeexercise7may.factory.ContactFactory;
 import za.ac.cput.employeeexercise7may.factory.EmployeeFactory;
 import za.ac.cput.employeeexercise7may.service.EmployeeService;
 
@@ -16,10 +18,14 @@ class EmployeeRepositoryTest {
     @Autowired
     private EmployeeService service;
     public static Employee employee1;
+    public static Contact contact1;
 
     @BeforeAll
     static void setUp(){
-        employee1 = EmployeeFactory.buildEmployee(23041109, "John", "Cena");
+        contact1 = ContactFactory.createContact("john@gmail.com", "0639908720", "0639908720");
+        assertNotNull(contact1);
+        System.out.println(contact1);
+        employee1 = EmployeeFactory.buildEmployee(23041109, "John", "Cena", contact1);
         assertNotNull(employee1);
         System.out.println(employee1);
     }
