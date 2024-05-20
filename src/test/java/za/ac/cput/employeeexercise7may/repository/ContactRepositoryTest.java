@@ -41,4 +41,12 @@ class ContactRepositoryTest {
         assertNotNull(findByMobile);
         System.out.println(findByMobile);
     }
+
+    @Test
+    void c_deleteByEmail(){
+        service.delete(contact1.getEmail());
+        System.out.println("Contact Deleted!");
+    }
+
+
 }

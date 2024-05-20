@@ -10,6 +10,8 @@ import za.ac.cput.employeeexercise7may.domain.Employee;
 public interface ContactRepository extends JpaRepository <Contact, String>{
     Contact findAllByMobile(String mobile);
 
+    void deleteContactByEmail(String email);
+
     @Query("select u from Contact u where u.email = ?1")
     Contact findByEmail(String email);
 }

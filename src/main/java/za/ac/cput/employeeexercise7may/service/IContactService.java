@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IContactService extends IService<Contact, String>{
     List<Contact> getAll();
+    void delete(String email);
 }

@@ -22,6 +22,11 @@ public class ContactService implements IContactService{
     }
 
     @Override
+    public void delete(String email) {
+            repository.deleteContactByEmail(email);
+    }
+
+    @Override
     public Contact create(Contact contact) {
         return repository.save(contact);
     }
