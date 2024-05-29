@@ -24,13 +24,6 @@ public class Employee {
     @Embedded
     private Gender gender;
 
-    /*@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contact_id", referencedColumnName = "email")
-    private Contact contact;*/
-
-    /*@OneToMany(mappedBy = "employee")
-    private List<Contact> contact;*/
-
     public Employee() {
     }
 
@@ -75,20 +68,6 @@ public class Employee {
         return Objects.hash(employeeNumber, firstName, lastName, contact, gender);
     }
 
-    /*@Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Employee employee = (Employee) o;
-            return employeeNumber == employee.employeeNumber && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(employeeNumber, firstName, lastName);
-        }
-    */
-
     @Override
     public String toString() {
         return "Employee{" +
@@ -99,15 +78,6 @@ public class Employee {
                 ", gender=" + gender +
                 '}';
     }
-
-    /*@Override
-    public String toString() {
-        return "Employee{" +
-                "employeeNumber=" + employeeNumber +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
-    }*/
 
     public static class Builder{
         private long employeeNumber;

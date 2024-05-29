@@ -1,0 +1,581 @@
+//POM
+<modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>za.ac.cput</groupId>
+
+    <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+//Application.properties
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://${MYSQL_HOST: localhost}:3306/exercise?createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=administrator!567509
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.jpa.show-sql: true
+#For controller:
+server.servlet.context-path=/exercise
+
+//Main
+package za.ac.cput.employeeexercise7may;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class EmployeeExercise7MayApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EmployeeExercise7MayApplication.class, args);
+    }
+
+}
+
+//Domain
+//OneToOne
+@Entity
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long employeeNumber;
+    private String firstName;
+    private String lastName;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "emp_contact",
+        joinColumns =
+                {@JoinColumn(name = "employeeNumber", referencedColumnName = "employeeNumber")},
+    inverseJoinColumns =
+            {@JoinColumn(name = "email", referencedColumnName = "email")})
+    private Contact contact;
+
+    @Embedded
+    private Gender gender;
+
+    public Employee() {
+    }
+
+    public Employee(Builder builder){
+        this.employeeNumber = builder.employeeNumber;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.contact = builder.contact;
+        this.gender = builder.gender;
+    }
+
+    public long getEmployeeNumber() {
+        return employeeNumber;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return employeeNumber == employee.employeeNumber && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(contact, employee.contact) && Objects.equals(gender, employee.gender);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employeeNumber, firstName, lastName, contact, gender);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employeeNumber=" + employeeNumber +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", contact=" + contact +
+                ", gender=" + gender +
+                '}';
+    }
+
+    public static class Builder{
+        private long employeeNumber;
+        private String firstName;
+        private String lastName;
+        private Contact contact;
+        private Gender gender;
+
+        public Builder setEmployeeNumber(long employeeNumber) {
+            this.employeeNumber = employeeNumber;
+            return this;
+        }
+
+        public Builder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder setContact(Contact contact) {
+            this.contact = contact;
+            return this;
+        }
+
+        public Builder setGender(Gender gender) {
+            this.gender = gender;
+            return this;
+        }
+
+        public Builder copy (Employee employee){
+            this.employeeNumber = employee.employeeNumber;
+            this.firstName = employee.firstName;
+            this.lastName = employee.lastName;
+            this.contact = employee.contact;
+            this.gender = employee.gender;
+            return this;
+        }
+
+        public Employee build(){return new Employee(this);}
+    }
+}
+//1:1 cont.
+@Entity
+
+public class Contact {
+    @Id
+    private String email;
+    private String mobile;
+    private String workTelephone;
+
+    @OneToOne(mappedBy = "contact")
+    private Employee employee;
+
+ //@Embeddable
+ @Embeddable
+public class Gender implements ValueObject{
+    private String gender;
+
+    public Gender() {
+    }
+
+    public Gender(Builder builder){
+        this.gender = builder.gender;
+    }
+
+//1:1 2nd example
+ @Entity
+public class PersonOneToOne {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private AddressOneToOne address;
+  //--
+  @Entity
+
+public class AddressOneToOne {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String street;
+    private String city;
+    private String zipCode;
+
+    public AddressOneToOne() {
+    }
+
+ //M:N
+ @Entity
+
+public class StudentManyToMany {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @ManyToMany
+    @JoinTable(
+            name = "student_course",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<CourseManyToMany> courses;
+
+    public StudentManyToMany() {
+    }
+  //--
+ Entity
+public class CourseManyToMany {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    @ManyToMany(mappedBy = "courses")
+    private List<StudentManyToMany> students;
+
+    public CourseManyToMany() {
+    }
+
+  //1:N, M:1
+  @Entity
+public class DepartmentOneToMany {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    @OneToMany(mappedBy = "department")
+    //@OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<EmployeeOneToMany> employees;
+
+    public DepartmentOneToMany() {
+    }
+  //--
+  @Entity
+public class EmployeeOneToMany {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private DepartmentOneToMany department;
+
+    public EmployeeOneToMany() {
+    }
+  
+ //repository
+    @Repository
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    Employee findByFirstName(String firstName);
+}
+
+//repository test
+@SpringBootTest
+class EmployeeRepositoryTest {
+
+    @Autowired
+    private EmployeeService service;
+    public static Employee employee1;
+    public static Contact contact1;
+
+    @BeforeAll
+    static void setUp(){
+        contact1 = ContactFactory.createContact("john@gmail.com", "0639908720", "0639908720");
+        assertNotNull(contact1);
+        System.out.println(contact1);
+        employee1 = EmployeeFactory.buildEmployee(23041109, "John", "Cena", contact1);
+        assertNotNull(employee1);
+        System.out.println(employee1);
+    }
+
+    @Test
+    void save(){
+        Employee save = service.create(employee1);
+        System.out.println(save);
+    }
+
+    @Test
+    void findByFirstName() {
+        Employee find = service.findByFirstName(employee1.getFirstName());
+        assertNotNull(find);
+        System.out.println(find);
+    }
+}
+
+//Service
+//generic service IService
+public interface IService <T, ID>{
+    T create (T t);
+    T read (ID id);
+    T update (T t);
+}
+
+//extend IService
+public interface IEmployeeService extends IService <Employee, Long>{
+    List<Employee> getAll();
+}
+
+//IService Impl
+@Service
+public class EmployeeService implements IEmployeeService {
+
+    private EmployeeRepository repository;
+
+    @Autowired
+    EmployeeService(EmployeeRepository repository){this.repository=repository;}
+
+    @Override
+    public List<Employee> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public Employee create(Employee employee) {
+        return repository.save(employee);
+    }
+
+    @Override
+    public Employee read(Long employeeNumber) {
+        return repository.findById(employeeNumber).orElse(null);
+    }
+
+    public Employee findByFirstName(String firstName){
+        return repository.findByFirstName(firstName);
+    }
+
+    @Override
+    public Employee update(Employee employee) {
+        return repository.save(employee);
+    }
+}
+
+//Service Test
+@SpringBootTest
+@TestMethodOrder(MethodOrderer.MethodName.class)
+class EmployeeServiceTest {
+
+    @Autowired
+    private EmployeeService service;
+
+    private static Employee employee1;
+    private static Employee employee2;
+    private static Contact contact1;
+    private static Contact contact2;
+
+    @BeforeAll
+    static void setup(){
+        contact1 = ContactFactory.createContact("jimslim@gmail.com", "0322256798", "0322256798");
+        assertNotNull(contact1);
+        System.out.println(contact1);
+        contact2 = ContactFactory.createContact("jacky@gmail.com", "0322112798", "0322112798");
+        assertNotNull(contact2);
+        System.out.println(contact2);
+        employee1 = EmployeeFactory.buildEmployee(1, "Slim", "Jim", contact1);
+        assertNotNull(employee1);
+        System.out.println(employee1);
+        employee2 = EmployeeFactory.buildEmployeeGender(2, "Jacky", "Chan", contact2, "Male");
+        assertNotNull(employee2);
+        System.out.println(employee2);
+    }
+
+    @Test
+    void d_getAll() {
+        System.out.println(service.getAll());
+    }
+
+    @Test
+    void a_create(){
+        Employee save = service.create(employee1);
+        assertNotNull(save);
+        System.out.println(save);
+        Employee save2 = service.create(employee2);
+        assertNotNull(save2);
+        System.out.println(save2);
+    }
+
+    @Test
+    void b_read() {
+        Employee read = service.read(employee1.getEmployeeNumber());
+        assertNotNull(read);
+        System.out.println(read);
+    }
+
+    @Test
+    void c_update() {
+        Employee updated = new Employee.Builder().copy(employee1).setLastName("Kramer").build();
+        Employee update = service.update(updated);
+        assertNotNull(update);
+        System.out.println(update);
+    }
+}
+
+//Helper
+public class Helper {
+    public static boolean isNullOrEmpty(String firstName, String lastName){
+        if(firstName.isEmpty() || lastName.isEmpty()) return true;
+        else return false;
+    }
+
+    public static boolean genderIsNullOrEmpty(String gender){
+        if(gender.equalsIgnoreCase("Male") || gender.equalsIgnoreCase("Female")) return false;
+        else return true;
+    }
+
+    public static boolean emailValidation(String email){
+        boolean isValid = EmailValidator.getInstance().isValid(email);
+        return isValid;
+    }
+
+    public static boolean mobileAndWorkTelValidator(String mobile, String workTelephone){
+        boolean isValid = false;
+        if(mobile.length() == 10 && workTelephone.length() == 10) isValid = true;
+        return isValid;
+    }
+}
+
+//controller	http://localhost8080/contextpath/requestmapping/method/input
+@RestController
+@RequestMapping("/employee")
+
+public class EmployeeController {
+    @Autowired
+    private EmployeeService service;
+
+    @PostMapping("/create")
+    public Employee create(@RequestBody Employee employee){return service.create(employee);}
+
+    @GetMapping("/read/{employeenumber}")
+    public Employee read(@PathVariable Long employeenumber){return service.read(employeenumber);}
+
+    @PostMapping("/update")
+    public Employee update(@RequestBody Employee employee){return service.update(employee);}
+
+    @GetMapping("/getall")
+    public List<Employee> getall(){return service.getAll();}
+}
+
+//Test Controller
+
+@TestMethodOrder(MethodOrderer.MethodName.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class EmployeeControllerTest {
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    private final String BASE_URL = "http://localhost:8080/exercise/employee";
+
+    private static Employee employee;
+    private static Contact contact;
+
+    @BeforeAll
+    static void setup(){
+        contact = ContactFactory.createContact("steve@gmail.com", "0213340941", "0213340941");
+        assertNotNull(contact);
+        employee = EmployeeFactory.buildEmployee(310, "Steve", "Stevo", contact);
+        assertNotNull(employee);
+        System.out.println(employee);
+    }
+
+    @Test
+    void a_create() {
+        String url = BASE_URL +"/create";
+        ResponseEntity<Employee> response = restTemplate.postForEntity(url, employee, Employee.class);
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        Employee createdEmployee = response.getBody();
+        assertEquals(createdEmployee.getEmployeeNumber(), employee.getEmployeeNumber());
+        System.out.println("Saved data: " + employee);
+    }
+
+    @Test
+    void b_read() {
+        String url = BASE_URL +"/read/" + employee.getEmployeeNumber();
+        ResponseEntity<Employee> response = restTemplate.getForEntity(url, Employee.class);
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        Employee readEmployee = response.getBody();
+        assertEquals(readEmployee.getEmployeeNumber(), employee.getEmployeeNumber());
+        System.out.println("Read data: " + readEmployee);
+    }
+
+    @Test
+    void c_update() {
+        String url = BASE_URL + "/update";
+        Employee updateEmployee = new Employee.Builder().copy(employee).setLastName("Score").build();
+        assertNotNull(updateEmployee);
+        ResponseEntity<Employee> response = restTemplate.postForEntity(url, updateEmployee, Employee.class);
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        Employee responseEmployee = response.getBody();
+        assertEquals(responseEmployee.getEmployeeNumber(), updateEmployee.getEmployeeNumber());
+        System.out.println("Updated data: " + responseEmployee);
+    }
+
+    @Test
+    void d_getall() {
+        String url = BASE_URL + "/getall";
+        HttpHeaders header = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(null, header);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        System.out.println("Show all: ");
+        System.out.println(response);
+        System.out.println(response.getBody());
+    }
+}
+
+//
+//Controller test
+//Testing on PostMan
+
+//Create, update: POST
+
+//These are POST methods
+//Select Body, then raw
+//Use JSON format:
+	//JSON format
+	"contact": {
+        "email": "jimmynew@gmail.com",
+        "mobile": "0667821459",
+        "workTelephone": "0667821459"
+    }
+//Nested JSON
+{
+    "employeeNumber": 221103,
+    "firstName": "Jimmy",
+    "lastName": "Oakes",
+    "contact": {
+        "email": "jimmynew@gmail.com",
+        "mobile": "0667821459",
+        "workTelephone": "0667821459"
+    }
+}
