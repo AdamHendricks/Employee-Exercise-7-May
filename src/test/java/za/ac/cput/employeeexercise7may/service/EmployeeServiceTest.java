@@ -22,16 +22,24 @@ class EmployeeServiceTest {
     private EmployeeService service;
 
     private static Employee employee1;
+    private static Employee employee2;
     private static Contact contact1;
+    private static Contact contact2;
 
     @BeforeAll
     static void setup(){
         contact1 = ContactFactory.createContact("jimslim@gmail.com", "0322256798", "0322256798");
         assertNotNull(contact1);
         System.out.println(contact1);
-        employee1 = EmployeeFactory.buildEmployee(11233045, "Slim", "Jim", contact1);
+        contact2 = ContactFactory.createContact("jacky@gmail.com", "0322112798", "0322112798");
+        assertNotNull(contact2);
+        System.out.println(contact2);
+        employee1 = EmployeeFactory.buildEmployee(1, "Slim", "Jim", contact1);
         assertNotNull(employee1);
         System.out.println(employee1);
+        employee2 = EmployeeFactory.buildEmployeeGender(2, "Jacky", "Chan", contact2, "Male");
+        assertNotNull(employee2);
+        System.out.println(employee2);
     }
 
     @Test
@@ -44,6 +52,9 @@ class EmployeeServiceTest {
         Employee save = service.create(employee1);
         assertNotNull(save);
         System.out.println(save);
+        Employee save2 = service.create(employee2);
+        assertNotNull(save2);
+        System.out.println(save2);
     }
 
     @Test

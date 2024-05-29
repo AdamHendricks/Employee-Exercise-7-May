@@ -8,6 +8,7 @@ import java.util.Objects;
 @Entity
 public class Employee {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long employeeNumber;
     private String firstName;
     private String lastName;
@@ -19,6 +20,9 @@ public class Employee {
     inverseJoinColumns =
             {@JoinColumn(name = "email", referencedColumnName = "email")})
     private Contact contact;
+
+    @Embedded
+    private Gender gender;
 
     /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contact_id", referencedColumnName = "email")
@@ -35,6 +39,7 @@ public class Employee {
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.contact = builder.contact;
+        this.gender = builder.gender;
     }
 
     public long getEmployeeNumber() {
@@ -53,17 +58,21 @@ public class Employee {
         return contact;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return employeeNumber == employee.employeeNumber && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(contact, employee.contact);
+        return employeeNumber == employee.employeeNumber && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(contact, employee.contact) && Objects.equals(gender, employee.gender);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(employeeNumber, firstName, lastName, contact);
+        return Objects.hash(employeeNumber, firstName, lastName, contact, gender);
     }
 
     /*@Override
@@ -87,6 +96,7 @@ public class Employee {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", contact=" + contact +
+                ", gender=" + gender +
                 '}';
     }
 
@@ -104,6 +114,7 @@ public class Employee {
         private String firstName;
         private String lastName;
         private Contact contact;
+        private Gender gender;
 
         public Builder setEmployeeNumber(long employeeNumber) {
             this.employeeNumber = employeeNumber;
@@ -125,11 +136,17 @@ public class Employee {
             return this;
         }
 
+        public Builder setGender(Gender gender) {
+            this.gender = gender;
+            return this;
+        }
+
         public Builder copy (Employee employee){
             this.employeeNumber = employee.employeeNumber;
             this.firstName = employee.firstName;
             this.lastName = employee.lastName;
             this.contact = employee.contact;
+            this.gender = employee.gender;
             return this;
         }
 

@@ -13,6 +13,11 @@ public class Helper {
         else return false;
     }
 
+    public static boolean genderIsNullOrEmpty(String gender){
+        if(gender.equalsIgnoreCase("Male") || gender.equalsIgnoreCase("Female")) return false;
+        else return true;
+    }
+
     /*public static boolean emailValidation(String email){
         return Pattern.compile(regexPattern)
                 .matcher(email)

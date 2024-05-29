@@ -33,4 +33,11 @@ class EmployeeFactoryTest {
         assertNotNull(create);
         System.out.println(create);
     }
+
+    @Test
+    void c_buildEmployeeWithGender(){
+        Employee create = EmployeeFactory.buildEmployeeGender(11023445, "Kim", "Pool", contact, "male");
+        assertNotNull(create);
+        System.out.println(create);
+    }
 }
