@@ -6,4 +6,5 @@ import za.ac.cput.employeeexercise7may.domain.Employee;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee findByFirstName(String firstName);
+    void deleteById(Long employeeNumber);
 }

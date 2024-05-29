@@ -9,20 +9,32 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
-
 public class EmployeeController {
     @Autowired
     private EmployeeService service;
 
     @PostMapping("/create")
-    public Employee create(@RequestBody Employee employee){return service.create(employee);}
+    public Employee create(@RequestBody Employee employee){
+        return service.create(employee);
+    }
 
     @GetMapping("/read/{employeenumber}")
-    public Employee read(@PathVariable Long employeenumber){return service.read(employeenumber);}
+    public Employee read(@PathVariable Long employeenumber){
+        return service.read(employeenumber);
+    }
 
     @PostMapping("/update")
-    public Employee update(@RequestBody Employee employee){return service.update(employee);}
+    public Employee update(@RequestBody Employee employee){
+        return service.update(employee);
+    }
 
     @GetMapping("/getall")
-    public List<Employee> getall(){return service.getAll();}
+    public List<Employee> getall(){
+        return service.getAll();
+    }
+
+    @DeleteMapping("/delete/{employeeid}")
+    public void delete(@PathVariable Long employeeid){
+        service.delete(employeeid);
+    }
 }

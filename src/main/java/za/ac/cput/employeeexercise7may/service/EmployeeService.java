@@ -22,6 +22,11 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
+    public void delete(Long employeeNumber) {
+        repository.deleteById(employeeNumber);
+    }
+
+    @Override
     public Employee create(Employee employee) {
         return repository.save(employee);
     }

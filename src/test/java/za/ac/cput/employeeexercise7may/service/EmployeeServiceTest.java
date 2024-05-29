@@ -71,4 +71,9 @@ class EmployeeServiceTest {
         assertNotNull(update);
         System.out.println(update);
     }
+    @Test
+    void e_delete(){
+        service.delete(employee1.getEmployeeNumber());
+        System.out.println("Employee deleted!");
+    }
 }

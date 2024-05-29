@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IEmployeeService extends IService <Employee, Long>{
     List<Employee> getAll();
+    void delete(Long employeeNumber);
 }

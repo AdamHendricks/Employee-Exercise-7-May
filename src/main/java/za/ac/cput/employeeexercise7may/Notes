@@ -291,11 +291,12 @@ public class EmployeeOneToMany {
 
     public EmployeeOneToMany() {
     }
-  
+
  //repository
     @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee findByFirstName(String firstName);
+    void deleteById(Long employeeNumber);
 }
 
 //repository test
@@ -373,6 +374,11 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
+    public void delete(Long employeeNumber) {
+        repository.deleteById(employeeNumber);
+    }
+
+    @Override
     public Employee update(Employee employee) {
         return repository.save(employee);
     }
@@ -436,6 +442,12 @@ class EmployeeServiceTest {
         assertNotNull(update);
         System.out.println(update);
     }
+
+    @Test
+    void e_delete(){
+        service.delete(employee1.getEmployeeNumber());
+        System.out.println("Employee deleted!");
+    }
 }
 
 //Helper
@@ -481,6 +493,11 @@ public class EmployeeController {
 
     @GetMapping("/getall")
     public List<Employee> getall(){return service.getAll();}
+
+    @DeleteMapping("/delete/{employeeid}")
+    public void delete(@PathVariable Long employeeid){
+        service.delete(employeeid);
+    }
 }
 
 //Test Controller
