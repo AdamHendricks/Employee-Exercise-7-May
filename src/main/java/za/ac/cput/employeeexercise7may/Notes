@@ -596,3 +596,23 @@ class EmployeeControllerTest {
         "workTelephone": "0667821459"
     }
 }
+
+//facade
+@Component
+public class EmployeeContact {
+
+    private EmployeeService employeeService;
+    private ContactService contactService;
+
+    EmployeeContact(EmployeeService employeeService, ContactService contactService){
+        this.employeeService = employeeService;
+        this.contactService = contactService;
+    }
+
+    public void testMethod(Long employeeId){
+        employeeService.delete(employeeId);
+    }
+
+    //we use these services to communicate across each other for specific tasks
+
+}
